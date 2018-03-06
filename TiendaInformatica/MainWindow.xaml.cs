@@ -31,7 +31,8 @@ namespace TiendaInformatica
         Producto producto = new Producto();
         Cliente cliente = new Cliente();
         LineaVenta lineaventa = new LineaVenta();
-        Venta venta = new Venta();
+        HashSet<LineaVenta> listalineaventas = new HashSet<LineaVenta>();
+        Venta venta;
         Cliente clientetpv = new Cliente();
         string user;
         double total;
@@ -52,6 +53,7 @@ namespace TiendaInformatica
             grid_categorias.DataContext = categoria;
             grid_productos.DataContext = producto;
             grid_clientes.DataContext = cliente;
+            grid_TPV.DataContext = lineaventa;
             dg_empleados.ItemsSource = unit.RepositorioEmpleado.ObtenerTodo().ToList();
             dg_proveedores.ItemsSource = unit.RepositorioProveedor.ObtenerTodo().ToList();
             dg_categorias.ItemsSource = unit.RepositorioCategoria.ObtenerTodo().ToList();
@@ -723,7 +725,8 @@ namespace TiendaInformatica
                 Button b = (Button)aux;
 
                 String[] btname = b.Name.Split('_');
-                Producto productoTPV = unit.RepositorioProducto.ObtenerUno(c=>c.ProductoId.Equals(btname[1]));
+                int cx = Convert.ToInt32(btname[1].Trim());
+                    Producto productoTPV = unit.RepositorioProducto.ObtenerUno(c=>c.ProductoId == cx);
                 //setProductoTPV(productoTPV);
 
                 if (productoTPV.Stock < 1)
@@ -748,38 +751,41 @@ namespace TiendaInformatica
                         lineaventa.ProductoId = productoTPV.ProductoId;
                         lineaventa.Cantidad = 1;
                         lineaventa.VentaId = venta.VentaId;
+                        lineaventa.Productos = productoTPV;
+                        lineaventa.Ventas = venta;
 
                         venta.LineaVentas.Add(lineaventa);
 
                         total += lineaventa.Productos.Precio;
-                        setTotal();
 
                         productoTPV.Stock--;
                         unit.RepositorioProducto.Actualizar(productoTPV);
+                        listalineaventas.Add(lineaventa);
                     }
                     else
                     {
                         // la venta ya contiene ese producto, se incrementa la cantidad en la linea
-                        LineaVenta linea = venta.LineaVentas.Where(c => c.Productos.ProductoId.Equals(productoTPV.ProductoId)).FirstOrDefault();
-                        linea.Cantidad++;
-                        total += linea.Productos.Precio;
-                        setTotal();
-
+                        lineaventa = venta.LineaVentas.Where(c => c.Productos.ProductoId.Equals(productoTPV.ProductoId)).FirstOrDefault();
+                        total += lineaventa.Productos.Precio;
+                        setTotal(lineaventa);
                         productoTPV.Stock--;
                         unit.RepositorioProducto.Actualizar(productoTPV);
                     }
-
                     dg_TPV.ItemsSource = "";
-                    dg_TPV.ItemsSource = venta.LineaVentas.ToList();
+                    //dg_TPV.ItemsSource = venta.LineaVentas.ToList();
+                    dg_TPV.ItemsSource = listalineaventas;
                 }
             }
         }
 
-        private void setTotal()
+        private void setTotal(LineaVenta linea)
         {
-            for (int i = 0; i < venta.LineaVentas.Count; i++)
+            foreach (var item in listalineaventas)
             {
-
+                if (item.ProductoId==linea.ProductoId)
+                {
+                    item.Cantidad++;
+                }
             }
         }
         #endregion
