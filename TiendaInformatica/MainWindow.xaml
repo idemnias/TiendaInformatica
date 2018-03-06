@@ -1,0 +1,180 @@
+﻿<Window x:Class="TiendaInformatica.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TiendaInformatica"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="487" Width="804.742">
+    <Grid Name="grid_gestion">
+        <TabControl Name="ControlTab" SelectionChanged="ControlTab_SelectionChanged">
+            <TabItem Header="Usuario" Name="TabUsuario">
+                <Grid Name="grid_usuario">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="380"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="70"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Label Content="Usuario" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Top" Width="70" Margin="0,0,10,0"/>
+                    <TextBox Name="tb_u_usuario" Grid.Column="1" Grid.Row="1" Width="135" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Top" Height="26" Margin="10,0,0,0"/>
+                    <Label Content="Contraseña" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Height="26" Margin="0,0,10,0" />
+                    <PasswordBox x:Name="pw_usuario" Grid.Column="1" Grid.Row="1" Width="135" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Height="26" Margin="10,0,0,0"/>
+                    <Button x:Name="bt_validar_usuario" Margin="0,10,0,0" Grid.Column="0" Grid.Row="2" Content="Validar" Width="45" Height="20" Click="bt_validar_usuario_Click" VerticalAlignment="Top"  Grid.ColumnSpan="2"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Empleados" Name="TabEmpleados">
+                <Grid Name="grid_empleados" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="400"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Usuario" HorizontalAlignment="Left" Margin="62,110,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <Label Content="Contraseña" HorizontalAlignment="Left" Margin="62,141,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <Label Content="Nombre" HorizontalAlignment="Left" Margin="62,172,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <Label Content="TipoCuenta" HorizontalAlignment="Left" Margin="62,203,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <TextBox x:Name="tb_e_usuario" Text="{Binding Path=Usuario, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="184,113,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="175"/>
+                    <TextBox x:Name="tb_e_contraseña" Text="{Binding Path=Contraseña, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="184,144,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="175"/>
+                    <TextBox x:Name="tb_e_nombre" Text="{Binding Path=Nombre, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="184,175,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="175"/>
+                    <ComboBox x:Name="tb_e_tipocuenta" Text="{Binding Path=TipoCuenta, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="184,206,0,0" VerticalAlignment="Top" Width="175">
+                        <ComboBoxItem Content="Administrador"/>
+                        <ComboBoxItem Content="Ventas"/>
+                    </ComboBox>
+                    <Button x:Name="bt_e_añadir" Content="Añadir" HorizontalAlignment="Left" Grid.Column="0" Margin="62,293,0,0" VerticalAlignment="Top" Width="75" Click="bt_añadir_Click"/>
+                    <Button x:Name="bt_e_nuevo" Content="Nuevo" HorizontalAlignment="Left" Grid.Column="0" Margin="177,344,0,0" VerticalAlignment="Top" Width="75" Click="bt_nuevo_Click"/>
+                    <Button x:Name="bt_e_modificar" Content="Modificar" HorizontalAlignment="Left" Grid.Column="0" Margin="177,293,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="bt_modificar_Click"/>
+                    <Button x:Name="bt_e_eliminar" Content="Eliminar" HorizontalAlignment="Left" Grid.Column="0" Margin="284,293,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="bt_eliminar_Click"/>
+
+                    <DataGrid x:Name="dg_empleados" DataContext="{Binding Source=Empleado}" Grid.Column="1" Margin="20,20,20,20" SelectionChanged="dg_empleados_SelectionChanged"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Proveedores" Name="TabProveedores">
+                <Grid Name="grid_proveedores">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="400"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Nombre" HorizontalAlignment="Left" Margin="62,110,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <Label Content="Direccion" HorizontalAlignment="Left" Margin="62,141,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <Label Content="TlfContacto" HorizontalAlignment="Left" Margin="62,172,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <Label Content="Contacto" HorizontalAlignment="Left" Margin="62,203,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <TextBox x:Name="tb_p_nombre" Text="{Binding Path=Nombre, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="239,113,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <TextBox x:Name="tb_p_direccion" Text="{Binding Path=Direccion, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="239,144,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <TextBox x:Name="tb_p_tlfcontacot" Text="{Binding Path=TlfContacto, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="239,175,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <TextBox x:Name="tb_p_contacto" Text="{Binding Path=Contacto, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="239,206,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <Button x:Name="bt_p_añadir" Content="Añadir" HorizontalAlignment="Left" Grid.Column="0" Margin="62,293,0,0" VerticalAlignment="Top" Width="75" Click="bt_p_añadir_Click" />
+                    <Button x:Name="bt_p_nuevo" Content="Nuevo" HorizontalAlignment="Left" Grid.Column="0" Margin="177,344,0,0" VerticalAlignment="Top" Width="75" Click="bt_p_nuevo_Click" />
+                    <Button x:Name="bt_p_modificar" Content="Modificar" HorizontalAlignment="Left" Grid.Column="0" Margin="177,293,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="bt_p_modificar_Click" />
+                    <Button x:Name="bt_p_eliminar" Content="Eliminar" HorizontalAlignment="Left" Grid.Column="0" Margin="284,293,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="bt_p_eliminar_Click" />
+
+                    <DataGrid x:Name="dg_proveedores" DataContext="{Binding Source=Proveedor}" Grid.Column="1" Margin="20,20,20,20" SelectionChanged="dg_proveedores_SelectionChanged"/>
+
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Categorias" Name="TabCategorias">
+                <Grid Name="grid_categorias">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="400"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Nombre" HorizontalAlignment="Left" Margin="62,22,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <Label Content="Descripcion" HorizontalAlignment="Left" Margin="62,53,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <Label Content="Imagen" HorizontalAlignment="Left" Margin="62,87,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <TextBox x:Name="tb_c_nombre" Text="{Binding Path=Nombre, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="168,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="175"/>
+                    <TextBox x:Name="tb_c_descripcion" Text="{Binding Path=Descripcion, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="168,56,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="175"/>
+                    <TextBox x:Name="tb_c_imagen" Grid.Column="0" IsReadOnly="True" HorizontalAlignment="Left" Height="23" Margin="168,88,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="175"/>
+                    <Button x:Name="bt_c_añadir" Content="Añadir" HorizontalAlignment="Left" Grid.Column="0" Margin="62,293,0,0" VerticalAlignment="Top" Width="75" Click="bt_c_añadir_Click" />
+                    <Button x:Name="bt_c_nuevo" Content="Nuevo" HorizontalAlignment="Left" Grid.Column="0" Margin="177,344,0,0" VerticalAlignment="Top" Width="75" Click="bt_c_nuevo_Click" />
+                    <Button x:Name="bt_c_modificar" Content="Modificar" HorizontalAlignment="Left" Grid.Column="0" Margin="177,293,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="bt_c_modificar_Click" />
+                    <Button x:Name="bt_c_eliminar" Content="Eliminar" HorizontalAlignment="Left" Grid.Column="0" Margin="284,293,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="bt_c_eliminar_Click" />
+
+                    <DataGrid x:Name="dg_categorias" DataContext="{Binding Source=Categoria}" Grid.Column="1" Margin="20,20,20,20" SelectionChanged="dg_categorias_SelectionChanged" />
+                    <Button x:Name="bt_c_elegir" Content="..." HorizontalAlignment="Left" Grid.Column="0" Margin="354,88,0,0" VerticalAlignment="Top" Width="27" Height="26" Click="bt_c_elegir_Click" />
+                    <Image Name="imagen" HorizontalAlignment="Left" Height="172" Margin="129,116,0,0" VerticalAlignment="Top" Width="172" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Productos" Name="TabProductos" >
+                <Grid Name="grid_productos">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="400"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Nombre" HorizontalAlignment="Left" Margin="62,25,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <Label Content="Precio" HorizontalAlignment="Left" Margin="62,56,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <Label Content="Descripcion" HorizontalAlignment="Left" Margin="62,87,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <Label Content="Stock" HorizontalAlignment="Left" Margin="62,146,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <Label Content="Imagen" HorizontalAlignment="Left" Margin="62,117,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <Label Content="ProveedorId" HorizontalAlignment="Left" Margin="62,177,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <Label Content="CategoriaId" HorizontalAlignment="Left" Margin="62,208,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <TextBox x:Name="tb_pr_nombre" Text="{Binding Path=Nombre, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="194,28,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="165"/>
+                    <TextBox x:Name="tb_pr_precio" Text="{Binding Path=Precio, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="194,59,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="165"/>
+                    <TextBox x:Name="tb_pr_descripcion" Text="{Binding Path=Descripcion, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="194,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="165"/>
+                    <TextBox x:Name="tb_pr_stock" Text="{Binding Path=Stock, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="194,149,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="165"/>
+                    <TextBox x:Name="tb_pr_imagen" IsReadOnly="True" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="194,121,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="165"/>
+                    <Button x:Name="bt_pr_añadir" Content="Añadir" HorizontalAlignment="Left" Grid.Column="0" Margin="62,369,0,0" VerticalAlignment="Top" Width="75" Click="bt_pr_añadir_Click" />
+                    <Button x:Name="bt_pr_nuevo" Content="Nuevo" HorizontalAlignment="Left" Grid.Column="0" Margin="177,398,0,0" VerticalAlignment="Top" Width="75" Click="bt_pr_nuevo_Click" />
+                    <Button x:Name="bt_pr_modificar" Content="Modificar" HorizontalAlignment="Left" Grid.Column="0" Margin="177,369,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="bt_pr_modificar_Click" />
+                    <Button x:Name="bt_pr_eliminar" Content="Eliminar" HorizontalAlignment="Left" Grid.Column="0" Margin="284,369,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="bt_pr_eliminar_Click" />
+                    <ComboBox x:Name="cb_pr_proveedorid" Grid.Column="0" HorizontalAlignment="Left" Height="26" Margin="194,177,0,0" VerticalAlignment="Top" Width="165" SelectionChanged="cb_pr_proveedorid_SelectionChanged"/>
+                    <ComboBox x:Name="cb_pr_categoriaid" Grid.Column="0" HorizontalAlignment="Left" Height="26" Margin="194,208,0,0" VerticalAlignment="Top" Width="165" SelectionChanged="cb_pr_categoriaid_SelectionChanged" IsSynchronizedWithCurrentItem="False"/>
+                    <Image Name="imagen_pr" HorizontalAlignment="Left" Height="113" Margin="157,251,0,0" VerticalAlignment="Top" Width="113" />
+                    <DataGrid x:Name="dg_productos" DataContext="{Binding Source=Producto}" Grid.Column="1" Margin="20,20,20,20" SelectionChanged="dg_productos_SelectionChanged"/>
+                    <Button x:Name="bt_pr_elegir" Content="..." HorizontalAlignment="Left" Grid.Column="0" Margin="376,121,0,0" VerticalAlignment="Top" Width="24" Height="23" Click="bt_pr_elegir_Click" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Clientes" Name="TabClientes" >
+                <Grid Name="grid_clientes" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="400"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Nombre" HorizontalAlignment="Left" Margin="62,110,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <Label Content="Telefono" HorizontalAlignment="Left" Margin="62,141,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <Label Content="Email" HorizontalAlignment="Left" Margin="62,172,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <Label Content="Direccion" HorizontalAlignment="Left" Margin="62,203,0,0" VerticalAlignment="Top" Grid.Column="0"/>
+                    <TextBox x:Name="tb_cl_nombre" Text="{Binding Path=Nombre, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="184,113,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="175"/>
+                    <TextBox x:Name="tb_cl_telefono" Text="{Binding Path=Telefono, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="184,144,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="175"/>
+                    <TextBox x:Name="tb_cl_email" Text="{Binding Path=Email, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="184,175,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="175"/>
+                    <TextBox x:Name="tb_cl_direccion" Text="{Binding Path=Direccion, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Left" Height="23" Margin="184,206,0,0" VerticalAlignment="Top" Width="175"/>
+                    <Button x:Name="bt_cl_añadir" Content="Añadir" HorizontalAlignment="Left" Grid.Column="0" Margin="62,293,0,0" VerticalAlignment="Top" Width="75" Click="bt_cl_añadir_Click" />
+                    <Button x:Name="bt_cl_nuevo" Content="Nuevo" HorizontalAlignment="Left" Grid.Column="0" Margin="177,344,0,0" VerticalAlignment="Top" Width="75" Click="bt_cl_nuevo_Click" />
+                    <Button x:Name="bt_cl_modificar" Content="Modificar" HorizontalAlignment="Left" Grid.Column="0" Margin="177,293,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="bt_cl_modificar_Click" />
+                    <Button x:Name="bt_cl_eliminar" Content="Eliminar" HorizontalAlignment="Left" Grid.Column="0" Margin="284,293,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="bt_cl_eliminar_Click" />
+
+                    <DataGrid x:Name="dg_clientes" DataContext="{Binding Source=Cliente}" Grid.Column="1" Margin="20,20,20,20" SelectionChanged="dg_clientes_SelectionChanged"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="TPV" Name="TabTPV">
+                <Grid Name="grid_TPV">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="220"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="150"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Column="0">
+                        <StackPanel Name="sp_categorias" Grid.Column="0" Grid.Row="0" />
+                    </ScrollViewer>
+
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Column="1">
+                        <StackPanel Name="sp_productos" Grid.Column="1" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                    </ScrollViewer>
+
+                    <DataGrid Grid.Column="1" Grid.Row="1" Name="dg_TPV" />
+
+                    <Label Content="Cliente" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center"/>
+                    <ComboBox Name="cb_clientetpv" Grid.Column="0" Grid.Row="1" Width="150" Height="26" Margin="35,24,35,100"/>
+                </Grid>
+            </TabItem>
+
+
+        </TabControl>
+    </Grid>
+</Window>
