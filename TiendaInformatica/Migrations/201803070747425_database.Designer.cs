@@ -7,13 +7,13 @@ namespace TiendaInformatica.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class todo : IMigrationMetadata
+    public sealed partial class database : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(todo));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(database));
         
         string IMigrationMetadata.Id
         {
-            get { return "201802281732463_todo"; }
+            get { return "201803070747425_database"; }
         }
         
         string IMigrationMetadata.Source

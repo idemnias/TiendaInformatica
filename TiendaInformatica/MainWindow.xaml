@@ -167,11 +167,12 @@
                         <StackPanel Name="sp_productos" Grid.Column="1" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center"/>
                     </ScrollViewer>
 
-                    <DataGrid Grid.Column="1" Grid.Row="1" Name="dg_TPV" AutoGenerateColumns="False" DataContext="{Binding Source=LineaVenta}">
+                    <DataGrid Grid.Column="1" Grid.Row="1" Name="dg_TPV" AutoGenerateColumns="False" DataContext="{Binding Source=LineaVenta}" SelectionChanged="dg_TPV_SelectionChanged">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Producto" Binding="{Binding Path=Productos.Nombre}"/>
                             <DataGridTextColumn Header="Cantidad" Binding="{Binding Path=Cantidad}"/>
+                            <DataGridTextColumn Header="Producto" Binding="{Binding Path=Productos.Nombre}"/>
                             <DataGridTextColumn Header="Precio" Binding="{Binding Path=Productos.Precio}"/>
+                            <DataGridTextColumn Header="Precio Total" Binding="{Binding Path=PrecioTotal}"/>
                         </DataGrid.Columns>
                     </DataGrid>
 

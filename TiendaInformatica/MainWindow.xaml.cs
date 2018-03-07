@@ -31,7 +31,7 @@ namespace TiendaInformatica
         Producto producto = new Producto();
         Cliente cliente = new Cliente();
         LineaVenta lineaventa = new LineaVenta();
-        HashSet<LineaVenta> listalineaventas = new HashSet<LineaVenta>();
+        List<LineaVenta> listalineaventas = new List<LineaVenta>();
         Venta venta;
         Cliente clientetpv = new Cliente();
         string user;
@@ -546,12 +546,14 @@ namespace TiendaInformatica
             unit.RepositorioCliente.Crear(cliente);
             dg_clientes.ItemsSource = unit.RepositorioCliente.ObtenerTodo().ToList();
             DesactivarBotonesClientes();
+            RellenarCombobox_Clientes();
         }
 
         private void bt_cl_modificar_Click(object sender, RoutedEventArgs e)
         {
             unit.RepositorioCliente.Actualizar(cliente);
             dg_clientes.ItemsSource = unit.RepositorioCliente.ObtenerTodo().ToList();
+            RellenarCombobox_Clientes();
         }
 
         private void bt_cl_eliminar_Click(object sender, RoutedEventArgs e)
@@ -560,6 +562,7 @@ namespace TiendaInformatica
             dg_clientes.ItemsSource = unit.RepositorioCliente.ObtenerTodo().ToList();
             DesactivarBotonesClientes();
             LimpiarClientes();
+            RellenarCombobox_Clientes();
         }
 
         private void bt_cl_nuevo_Click(object sender, RoutedEventArgs e)
@@ -611,6 +614,8 @@ namespace TiendaInformatica
 #endregion
 
 #region METODOS TPV Y TABS
+
+        //crecion imagen de un producto
         private Image EnseñarImagenTPV(string ruta)
         {
             try
@@ -631,7 +636,7 @@ namespace TiendaInformatica
             }
             
         }
-
+        //Creacion de botones de categorias
         public void GenerarBotones()
         {
             try
@@ -663,6 +668,7 @@ namespace TiendaInformatica
                 throw;
             }
         }
+        //Click  en una categoria y creacion de botones de productos
         private void categoria_click(object sender, RoutedEventArgs e)
         {
 
@@ -681,6 +687,7 @@ namespace TiendaInformatica
 
                 for (int i = 0; i < listproductos.Count; i++)
                 {
+                    //creacion de stackpanel para introducir en el boton
                     StackPanel stackp = new StackPanel();
                     stackp.VerticalAlignment = VerticalAlignment.Center;
                     stackp.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -696,6 +703,7 @@ namespace TiendaInformatica
                     stackp.Children.Add(EnseñarImagenTPV(listproductos[i].Imagen));
                     stackp.Children.Add(l);
 
+                    //crear boton
                     Button b = new Button();
                     b.Width = 110;
                     b.Height = 125;
@@ -703,6 +711,7 @@ namespace TiendaInformatica
                     b.Content = stackp;
                     b.Name = "P_" + listproductos[i].ProductoId;
                     b.Click += producto_click;
+                    //mirar stock
                     if (listproductos[i].Stock > 0) 
                     {
                         b.Background = Brushes.LightBlue;
@@ -753,8 +762,9 @@ namespace TiendaInformatica
                         lineaventa.VentaId = venta.VentaId;
                         lineaventa.Productos = productoTPV;
                         lineaventa.Ventas = venta;
+                        lineaventa.CalcularPrecio();
 
-                        venta.LineaVentas.Add(lineaventa);
+                        //venta.LineaVentas.Add(lineaventa);
 
                         total += lineaventa.Productos.Precio;
 
@@ -767,7 +777,8 @@ namespace TiendaInformatica
                         // la venta ya contiene ese producto, se incrementa la cantidad en la linea
                         lineaventa = venta.LineaVentas.Where(c => c.Productos.ProductoId.Equals(productoTPV.ProductoId)).FirstOrDefault();
                         total += lineaventa.Productos.Precio;
-                        setTotal(lineaventa);
+                        SetCantidad(lineaventa);
+                        lineaventa.CalcularPrecio();
                         productoTPV.Stock--;
                         unit.RepositorioProducto.Actualizar(productoTPV);
                     }
@@ -778,7 +789,7 @@ namespace TiendaInformatica
             }
         }
 
-        private void setTotal(LineaVenta linea)
+        private void SetCantidad(LineaVenta linea)
         {
             foreach (var item in listalineaventas)
             {
@@ -788,13 +799,39 @@ namespace TiendaInformatica
                 }
             }
         }
-        #endregion
-
+        //clickar en combobox de cliente
         private void cb_clientetpv_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             clientetpv = unit.RepositorioCliente.ObtenerUno(c => c.Nombre.Equals(cb_clientetpv.Text));
             venta.ClienteId = Convert.ToInt32(cliente.ClienteId);
         }
+        //clickar en datagrid elimina objeto
+        private void dg_TPV_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (MessageBox.Show("¿Desea eliminar el producto?", "Cancelar", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                lineaventa = (LineaVenta)dg_TPV.SelectedItem;
+                //int posicion;
+                //for (int i = 0; i < listalineaventas.Count; i++)
+                //{
+                //    if (listalineaventas.ElementAt(i).LineaVentaId == lineaventa.LineaVentaId)
+                //    {
+                //        posicion = i;
+                //    }
+                //}
+                 listalineaventas.Remove(lineaventa);
+                dg_TPV.Items.Refresh();
+              
+                
+            }
+            else
+            {
+                //this.Close();
+            }
+        }
+        #endregion
+
+
     }
 
 

@@ -3,7 +3,7 @@ namespace TiendaInformatica.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class todo : DbMigration
+    public partial class database : DbMigration
     {
         public override void Up()
         {
@@ -45,6 +45,7 @@ namespace TiendaInformatica.Migrations
                         Cantidad = c.Int(nullable: false),
                         VentaId = c.Int(nullable: false),
                         ProductoId = c.Int(nullable: false),
+                        PrecioTotal = c.Double(nullable: false),
                     })
                 .PrimaryKey(t => t.LineaVentaId)
                 .ForeignKey("dbo.Productos", t => t.ProductoId, cascadeDelete: true)
