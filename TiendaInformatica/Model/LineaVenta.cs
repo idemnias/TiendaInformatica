@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TiendaInformatica.DAL;
 
 namespace TiendaInformatica.Model
 {
@@ -22,7 +23,9 @@ namespace TiendaInformatica.Model
 
         public void CalcularPrecio()
         {
-            PrecioTotal = Cantidad * Productos.Precio;
+            UnitofWork unit = new UnitofWork();
+            Producto aux = unit.RepositorioProducto.ObtenerUno(c => c.ProductoId == ProductoId);
+            PrecioTotal = Cantidad * aux.Precio;
         }
 
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -34,8 +35,8 @@ namespace TiendaInformatica
         List<LineaVenta> listalineaventas = new List<LineaVenta>();
         Venta venta;
         Cliente clientetpv = new Cliente();
-        string user;
-        double total;
+        Empleado user;
+        Producto productoTPV;
 
         string categorianombre;
         string proveedornombre;
@@ -75,7 +76,7 @@ namespace TiendaInformatica
             {
                 if (auxusuario.Contraseña.Equals(pw_usuario.Password.ToString()))
                 {
-                    user = auxusuario.Nombre;
+                    user = auxusuario;
                     if (auxusuario.TipoCuenta.Equals("Administrador"))
                     {
                         EnseñarTodaslasPestañas();
@@ -615,7 +616,7 @@ namespace TiendaInformatica
 
 #region METODOS TPV Y TABS
 
-        //crecion imagen de un producto
+//crecion imagen de un producto
         private Image EnseñarImagenTPV(string ruta)
         {
             try
@@ -636,7 +637,7 @@ namespace TiendaInformatica
             }
             
         }
-        //Creacion de botones de categorias
+//Creacion de botones de categorias
         public void GenerarBotones()
         {
             try
@@ -668,7 +669,7 @@ namespace TiendaInformatica
                 throw;
             }
         }
-        //Click  en una categoria y creacion de botones de productos
+//Click  en una categoria y creacion de botones de productos
         private void categoria_click(object sender, RoutedEventArgs e)
         {
 
@@ -725,6 +726,8 @@ namespace TiendaInformatica
                 }
             }
         }
+
+//Cuando clickamos a un producto para añadirlo a lineaventa
         private void producto_click(object sender, RoutedEventArgs e)
         {
 
@@ -735,8 +738,7 @@ namespace TiendaInformatica
 
                 String[] btname = b.Name.Split('_');
                 int cx = Convert.ToInt32(btname[1].Trim());
-                    Producto productoTPV = unit.RepositorioProducto.ObtenerUno(c=>c.ProductoId == cx);
-                //setProductoTPV(productoTPV);
+                    productoTPV = unit.RepositorioProducto.ObtenerUno(c=>c.ProductoId == cx);
 
                 if (productoTPV.Stock < 1)
                 {
@@ -747,13 +749,13 @@ namespace TiendaInformatica
                     if (venta == null)
                     {
                         venta = new Venta();
-                        Empleado usuario = unit.RepositorioEmpleado.ObtenerUno(c => c.Nombre.Equals(user));
-                        venta.EmpleadoId = usuario.UsuarioId;
-                        clientetpv = unit.RepositorioCliente.ObtenerUno(c => c.Nombre.Equals(cb_clientetpv.Text));
-                        venta.ClienteId = Convert.ToInt32(clientetpv.ClienteId);
-                        venta.Fecha = DateTime.Now;
+                        //Empleado usuario = unit.RepositorioEmpleado.ObtenerUno(c => c.Nombre.Equals(user));
+                        //venta.EmpleadoId = usuario.UsuarioId;
+                        //clientetpv = unit.RepositorioCliente.ObtenerUno(c => c.Nombre.Equals(cb_clientetpv.Text));
+                        //venta.ClienteId = Convert.ToInt32(clientetpv.ClienteId);
+                        //venta.Fecha = DateTime.Now;
                     }
-                    if (venta.LineaVentas.Where(c => c.Productos.ProductoId.Equals(productoTPV.ProductoId)).FirstOrDefault() == null)
+                    if (listalineaventas.Where(c => c.ProductoId.Equals(productoTPV.ProductoId)).FirstOrDefault() == null)
                     {
                         // la venta no tiene actualmente ese producto, se añade como linea
                         lineaventa = new LineaVenta();
@@ -766,72 +768,149 @@ namespace TiendaInformatica
 
                         //venta.LineaVentas.Add(lineaventa);
 
-                        total += lineaventa.Productos.Precio;
-
                         productoTPV.Stock--;
                         unit.RepositorioProducto.Actualizar(productoTPV);
                         listalineaventas.Add(lineaventa);
                     }
                     else
                     {
-                        // la venta ya contiene ese producto, se incrementa la cantidad en la linea
-                        lineaventa = venta.LineaVentas.Where(c => c.Productos.ProductoId.Equals(productoTPV.ProductoId)).FirstOrDefault();
-                        total += lineaventa.Productos.Precio;
-                        SetCantidad(lineaventa);
+// la venta ya contiene ese producto, se incrementa la cantidad en la linea
+                        lineaventa = listalineaventas.Where(c => c.ProductoId.Equals(productoTPV.ProductoId)).FirstOrDefault();
+                        lineaventa.Cantidad++;
                         lineaventa.CalcularPrecio();
                         productoTPV.Stock--;
                         unit.RepositorioProducto.Actualizar(productoTPV);
                     }
                     dg_TPV.ItemsSource = "";
-                    //dg_TPV.ItemsSource = venta.LineaVentas.ToList();
                     dg_TPV.ItemsSource = listalineaventas;
                 }
             }
         }
 
-        private void SetCantidad(LineaVenta linea)
-        {
-            foreach (var item in listalineaventas)
-            {
-                if (item.ProductoId==linea.ProductoId)
-                {
-                    item.Cantidad++;
-                }
-            }
-        }
-        //clickar en combobox de cliente
+//clickar en combobox de cliente
         private void cb_clientetpv_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             clientetpv = unit.RepositorioCliente.ObtenerUno(c => c.Nombre.Equals(cb_clientetpv.Text));
-            venta.ClienteId = Convert.ToInt32(cliente.ClienteId);
         }
-        //clickar en datagrid elimina objeto
+//clickar en datagrid elimina objeto
         private void dg_TPV_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (MessageBox.Show("¿Desea eliminar el producto?", "Cancelar", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            try
             {
                 lineaventa = (LineaVenta)dg_TPV.SelectedItem;
-                //int posicion;
-                //for (int i = 0; i < listalineaventas.Count; i++)
-                //{
-                //    if (listalineaventas.ElementAt(i).LineaVentaId == lineaventa.LineaVentaId)
-                //    {
-                //        posicion = i;
-                //    }
-                //}
-                 listalineaventas.Remove(lineaventa);
-                dg_TPV.Items.Refresh();
-              
+            }
+            catch (Exception)
+            {
+            }
+            
+        }
+//Clickar en delete en datagrid
+        public void Click_delete(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (MessageBox.Show("¿Desea eliminar el producto?", "Cancelar", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    Producto productoaux = listalineaventas.ElementAt(dg_TPV.SelectedIndex).Productos;
+                    productoaux.Stock += listalineaventas.ElementAt(dg_TPV.SelectedIndex).Cantidad;
+                    unit.RepositorioProducto.Actualizar(productoaux);
+                    listalineaventas.RemoveAt(dg_TPV.SelectedIndex);
+                    dg_TPV.ItemsSource = "";
+                    dg_TPV.ItemsSource = listalineaventas;
+
+                }
+                else
+                {
+                    MessageBox.Show("Cancelada eliminacion");
+                }
+            }
+            catch (Exception)
+            {
+            }
                 
+        }
+        
+
+//Realizar Pedido
+        private void bt_realizarpedido_tpv_Click(object sender, RoutedEventArgs e)
+        {
+            venta.Fecha = DateTime.Now;
+            venta.EmpleadoId = user.UsuarioId;
+            venta.Empleados = user;
+            clientetpv = unit.RepositorioCliente.ObtenerUno(c => c.Nombre.Equals(cb_clientetpv.Text));
+            venta.ClienteId = clientetpv.ClienteId;
+            venta.Clientes = clientetpv;
+            venta.LineaVentas = listalineaventas;
+            unit.RepositorioVenta.Crear(venta);
+            CrearFactura(venta);
+            dg_TPV.ItemsSource = "";
+            venta = new Venta();
+            lineaventa = new LineaVenta();
+            listalineaventas = new List<LineaVenta>();
+            dg_productos.ItemsSource = unit.RepositorioProducto.ObtenerTodo();
+
+        }
+//Cancelar Pedido
+        private void bt_cancelarpedido_tpv_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("¿Desea cancelar la venta?", "Cancelar", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                foreach (var item in listalineaventas)
+                {
+                    Producto productoaux = item.Productos;
+                    productoaux.Stock += item.Cantidad;
+                    unit.RepositorioProducto.Actualizar(productoaux);
+                }
+                venta = new Venta();
+                lineaventa = new LineaVenta();
+                listalineaventas.Clear();
+                productoTPV = new Producto();
+                dg_TPV.ItemsSource = "";
+
             }
             else
             {
-                //this.Close();
+                MessageBox.Show("Cancelada eliminacion");
+            }
+        }
+
+//Crear Factura
+        public void CrearFactura(Venta venta)
+        {
+            double total=0;
+
+            StreamWriter escritura;
+            /*siempre se mira si existe*/
+            String factura = "Factura N "+ venta.VentaId + ".txt";
+            if (!File.Exists(factura))
+            {
+                escritura = new StreamWriter(factura, true, Encoding.Default);
+                foreach (var item in venta.LineaVentas)
+                {
+                    escritura.WriteLine("Cantidad-------" + item.Cantidad + "  Articulo------" + item.Productos.Nombre + "  Precio------" + item.Productos.Precio + "  Precio Total del articulo--------" + item.PrecioTotal);
+                    total += item.PrecioTotal;
+                }
+                escritura.WriteLine("");
+                escritura.WriteLine("Precio Total --------" + total);
+                escritura.WriteLine("");
+                escritura.WriteLine("Atendido por -------"+venta.Empleados.Nombre);
+                escritura.WriteLine("");
+                escritura.WriteLine("Cliente -------" + venta.Clientes.Nombre);
+
+                /*escritura de lineas con WriteLine*/
+                /*IMPORTANTE al acabar de escribir el txt*/
+                escritura.Close();
+                Process proceso = new Process();
+                proceso.StartInfo.FileName = factura;
+                proceso.Start();
+            }
+
+            else
+            {
+                /*Error de que ya esta cargado*/
             }
         }
         #endregion
-
-
     }
 
 
