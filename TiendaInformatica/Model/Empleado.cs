@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace TiendaInformatica.Model
 {
     [Table("Empleados")]
-    public class Empleado
+    public class Empleado: PropertyValidateModel
     {
         public Empleado()
         {

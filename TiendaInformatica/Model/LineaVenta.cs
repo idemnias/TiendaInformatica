@@ -9,7 +9,7 @@ using TiendaInformatica.DAL;
 namespace TiendaInformatica.Model
 {
     [Table("LineaVentas")]
-    public class LineaVenta
+    public class LineaVenta: PropertyValidateModel
     {
         public int LineaVentaId { get; set; }
         public int Cantidad { get; set; }

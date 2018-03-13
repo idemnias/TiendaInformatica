@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace TiendaInformatica.Model
 {
     [Table("Ventas")]
-    public class Venta
+    public class Venta: PropertyValidateModel
     {
         public Venta()
         {
